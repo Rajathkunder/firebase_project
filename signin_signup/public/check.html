@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <meta charset="UTF-8">
+
+
+    <title>Fetch Data from Firebase Realtime Database</title>
+    <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-database.js"></script>
+    
+    <script>
+      // Your web app's Firebase configuration
+      var firebaseConfig = {
+        apiKey: "AIzaSyCD-DU4at0wCmjS7Wot8NHoanG-EpcPyR0",
+  authDomain: "wordpress-site-61c08.firebaseapp.com",
+  databaseURL: "https://wordpress-site-61c08-default-rtdb.firebaseio.com",
+  projectId: "wordpress-site-61c08",
+  storageBucket: "wordpress-site-61c08.appspot.com",
+  messagingSenderId: "540916829681",
+  appId: "1:540916829681:web:2c6f27e30dd37405ca4850",
+  measurementId: "G-18WW0R9LZP"
+      };
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+
+      function fetchData() {
+        let emailObj = JSON.parse(localStorage.getItem('email'));
+var email = emailObj.email;
+
+
+        //alert(email);
+        var usersRef = firebase.database().ref("contactForm");
+        var query = usersRef.orderByChild("email").equalTo(email);
+        query.once("value", function(snapshot) {
+          if (snapshot.exists()) {
+            snapshot.forEach(function(childSnapshot) {
+              var status = childSnapshot.val().status;
+             // alert(status);
+              document.getElementById("status").textContent = status;
+            });
+          } else {
+            window.location.href = "home.html";
+          }
+        });
+      }
+    </script>
+    
+  </head>
+  <body onload="fetchData()">
+   
+    <div class="alert alert-success" role="alert">
+        <h4 class="alert-heading">Already Submitted!</h4>
+        <p>Thank you for coming, Unfortunately you have Already submitted the Form.</p>
+        <hr>
+        <p class="mb-0">Admin response  is <span id="status"></span></p>
+       
+      </div>
+  </body>
+</html>
